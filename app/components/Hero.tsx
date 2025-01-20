@@ -69,7 +69,7 @@ const Hero = ({}: Props) => {
   return (
     <div className='bg-[#0CAFFF] pt-[5rem] min-h-screen'>
       <div className='container flex justify-between border-2 border-red-600'>
-        <div className='border-2 border-green-600'>
+        <div className='flex-1 bg-green-600'>
           <h1 className="text-[2.5rem] font-semibold font-notoJp text-white leading-relaxed mb-4">
             최고의 실력을 가진<br />
             <span className="text-white">외국인 인재를 찾고 계신가요?</span>
