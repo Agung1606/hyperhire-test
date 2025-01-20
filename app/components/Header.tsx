@@ -1,8 +1,7 @@
 import React from 'react'
 
-type Props = {}
 
-function Header({}: Props) {
+function Header() {
   return (
     <div className='bg-[#0CAFFF] z-50 fixed top-0 left-0 w-full py-3 border-b-black border-b-2'>
       <div className='container flex items-center justify-between'>
