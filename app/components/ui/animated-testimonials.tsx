@@ -12,16 +12,15 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type Testimonial = {
+  id: number;
   profileSrc: string;
   flagSrc: string;
   name: string;
   experience: string;
   hobbies: string[];
-  index: number;
 };
 
-const Card = ({profileSrc, flagSrc, name, experience, hobbies, index}: Testimonial) => {
-  const [role, duration] = experience.split("·");
+const Card = ({id, profileSrc, flagSrc, name, experience, hobbies}: Testimonial) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const springConfig = { stiffness: 100, damping: 5 };
   const x = useMotionValue(0); // going to set this value on mouse move
@@ -38,16 +37,16 @@ const Card = ({profileSrc, flagSrc, name, experience, hobbies, index}: Testimoni
 
   return (
   <motion.div
-    key={index}
+    key={id}
     className={`absolute w-[18.5rem] h-fit bg-white rounded-md px-4 py-6 ${
-      index === 0 ? "-translate-x-20 opacity-90" : index === 2 ? "translate-x-20 opacity-90" : "scale-110 z-20"
+      id === 0 ? "-translate-x-20 opacity-90" : id === 2 ? "translate-x-20 opacity-90" : "scale-110 z-20"
     }`}
-    onMouseEnter={() => setHoveredIndex(index)}
+    onMouseEnter={() => setHoveredIndex(id)}
     onMouseLeave={() => setHoveredIndex(null)}
   >
     {/* ---TOOLTIP--- */}
     <AnimatePresence mode="popLayout">
-      {hoveredIndex === index && (
+      {hoveredIndex === id && (
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.6 }}
           animate={{
@@ -66,10 +65,10 @@ const Card = ({profileSrc, flagSrc, name, experience, hobbies, index}: Testimoni
             rotate: rotate,
             whiteSpace: "nowrap",
           }}
-          className="absolute -top-12 left-[71px] flex text-xs flex-col items-center justify-center rounded-lg bg-white/80 z-50 shadow-xl px-3 py-1"
+          className="absolute -top-12 left-[71px] flex text-xs flex-col items-center justify-center rounded-lg bg-[#E9F7EF] z-50 shadow-xl px-3 py-1"
         >
-          <div className="text-green-500 text-xl font-notoJp flex items-center gap-x-2">
-            <div className="w-7 h-7 bg-green-300 rounded-full flex items-center justify-center">
+          <div className="text-[#00C696] text-xl font-notoJp flex items-center gap-x-2">
+            <div className="w-7 h-7 bg-[#BBF3D2] rounded-full flex items-center justify-center">
               <p className="font-bold">$</p>
             </div>
             <p className="font-bold">월100만원</p>
@@ -97,18 +96,18 @@ const Card = ({profileSrc, flagSrc, name, experience, hobbies, index}: Testimoni
           />
         </div>
       </div>
-      <p className='text-2xl text-black font-bold font-poppins'>
+      <p className='text-2xl text-black font-black font-poppins'>
         {name}
       </p>
-      <p className='text-xl text-blue-600 font-semibold font-notoJp'>
-        {role} <span className='font-bold'>· {duration}</span>
+      <p className='text-xl font-poppins text-[#4A77FF] font-black'>
+        {experience}
       </p>
     </div>
     <div className='grid grid-cols-2 justify-items-center gap-1'>
       {hobbies.map((hobby, index) => (
         <p 
           key={index} 
-          className={`w-fit font-notoJp font-bold text-black/80 text-lg border border-gray-400/80 px-2 py-1 rounded-lg ${
+          className={`w-fit font-poppins font-black text-[#5E626F] text-lg border border-[#C1C5CF] px-2 py-1 rounded-lg ${
             index === 0 || index === 1
             ? "col-span-2"
             : index === 2
@@ -166,10 +165,10 @@ export const AnimatedTestimonials = ({
       </button>
       <div className="relative flex justify-center items-center w-full h-80">
         <AnimatePresence>
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial) => (
             <Card 
-              key={index} 
-              index={index} 
+              key={testimonial.id} 
+              id={testimonial.id} 
               profileSrc={testimonial.profileSrc}
               flagSrc={testimonial.flagSrc}
               name={testimonial.name} 
