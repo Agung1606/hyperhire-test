@@ -2,7 +2,7 @@ import React from 'react'
 
 function Header() {
   return (
-    <div className='z-50 fixed top-0 left-0 w-full py-3'>
+    <div className='bg-gradient-to-bl from-[#26C2B9] to-[#288BE7] z-50 fixed top-0 left-0 w-full py-3'>
       <div className='container flex items-center justify-between'>
         <div className='flex items-center gap-x-2'>
           <p>Logo</p>
