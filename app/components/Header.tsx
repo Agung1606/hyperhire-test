@@ -3,7 +3,7 @@ import React from 'react'
 
 function Header() {
   return (
-    <div className='bg-[#0CAFFF] z-50 fixed top-0 left-0 w-full py-3 border-b-black border-b-2'>
+    <div className='bg-[#0CAFFF] z-50 fixed top-0 left-0 w-full py-3'>
       <div className='container flex items-center justify-between'>
         <div className='flex items-center gap-x-2'>
           <p>Logo</p>

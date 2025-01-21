@@ -1,16 +1,129 @@
 "use client";
 
-import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
+import { 
+  motion, 
+  AnimatePresence, 
+  useTransform, 
+  useMotionValue, 
+  useSpring 
+} from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type Testimonial = {
-  quote: string;
+  profileSrc: string;
+  flagSrc: string;
   name: string;
-  designation: string;
-  src: string;
+  experience: string;
+  hobbies: string[];
+  index: number;
 };
+
+const Card = ({profileSrc, flagSrc, name, experience, hobbies, index}: Testimonial) => {
+  const [role, duration] = experience.split("·");
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const springConfig = { stiffness: 100, damping: 5 };
+  const x = useMotionValue(0); // going to set this value on mouse move
+  // rotate the tooltip
+  const rotate = useSpring(
+    useTransform(x, [-100, 100], [-45, 45]),
+    springConfig
+  );
+  // translate the tooltip
+  const translateX = useSpring(
+    useTransform(x, [-100, 100], [-50, 50]),
+    springConfig
+  );
+
+  return (
+  <motion.div
+    key={index}
+    className={`absolute w-[18.5rem] h-fit bg-white rounded-md px-4 py-6 ${
+      index === 0 ? "-translate-x-20 opacity-90" : index === 2 ? "translate-x-20 opacity-90" : "scale-110 z-20"
+    }`}
+    onMouseEnter={() => setHoveredIndex(index)}
+    onMouseLeave={() => setHoveredIndex(null)}
+  >
+    {/* ---TOOLTIP--- */}
+    <AnimatePresence mode="popLayout">
+      {hoveredIndex === index && (
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.6 }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            transition: {
+              type: "spring",
+              stiffness: 260,
+              damping: 10,
+            },
+          }}
+          exit={{ opacity: 0, y: 20, scale: 0.6 }}
+          style={{
+            translateX: translateX,
+            rotate: rotate,
+            whiteSpace: "nowrap",
+          }}
+          className="absolute -top-12 left-[71px] flex text-xs flex-col items-center justify-center rounded-lg bg-white/80 z-50 shadow-xl px-3 py-1"
+        >
+          <div className="text-green-500 text-xl font-notoJp flex items-center gap-x-2">
+            <div className="w-7 h-7 bg-green-300 rounded-full flex items-center justify-center">
+              <p className="font-bold">$</p>
+            </div>
+            <p className="font-bold">월100만원</p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+    {/* ---TOOLTIP--- */}
+    <div className='flex flex-col items-center mb-10'>
+      <div className='relative mb-5'>
+        <Image 
+          src={profileSrc}
+          alt='profile picture'
+          width={130}
+          height={130}
+          className='object-cover rounded-full'
+        />
+        <div className='absolute bottom-0 right-2'>
+          <Image 
+            src={flagSrc}
+            alt='flag'
+            width={28}
+            height={28}
+            className='object-cover rounded-sm'
+          />
+        </div>
+      </div>
+      <p className='text-2xl text-black font-bold font-poppins'>
+        {name}
+      </p>
+      <p className='text-xl text-blue-600 font-semibold font-notoJp'>
+        {role} <span className='font-bold'>· {duration}</span>
+      </p>
+    </div>
+    <div className='grid grid-cols-2 justify-items-center gap-1'>
+      {hobbies.map((hobby, index) => (
+        <p 
+          key={index} 
+          className={`w-fit font-notoJp font-bold text-black/80 text-lg border border-gray-400/80 px-2 py-1 rounded-lg ${
+            index === 0 || index === 1
+            ? "col-span-2"
+            : index === 2
+            ? "-mr-2"
+            : "-ml-2"
+          }`}
+        >
+          {hobby}
+        </p>
+      ))}
+    </div>
+  </motion.div>
+  )
+};
+
 export const AnimatedTestimonials = ({
   testimonials,
   autoplay = false,
@@ -44,119 +157,34 @@ export const AnimatedTestimonials = ({
   };
 
   return (
-    <div className="flex-1 flex justify-between items-center relative antialiased font-sans mx-auto px-4 md:px-8 lg:px-12 py-20 bg-blue-600">
+    <div className="flex-1 flex justify-between items-center relative antialiased font-sans mx-auto px-4 md:px-8 lg:px-12 py-20">
       <button
         onClick={handlePrev}
-        className="h-7 w-7 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center group/button"
+        className="text-white active:scale-75"
       >
-        <IconArrowLeft className="h-5 w-5 text-black dark:text-neutral-400 group-hover/button:rotate-12 transition-transform duration-300" />
+        <IconChevronLeft width={40} height={40} />
       </button>
-      <div className="flex justify-center items-center w-full h-80">
+      <div className="relative flex justify-center items-center w-full h-80">
         <AnimatePresence>
           {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              className={`absolute w-[18rem] h-fit bg-white rounded-md px-4 py-6 ${
-                index === 0 ? "-translate-x-20" : index === 2 ? "translate-x-20" : "scale-110 z-20"
-              }`}
-            >
-              <div className='flex flex-col items-center mb-10'>
-                <div className='relative mb-5'>
-                  <Image 
-                    src={'/profile-pic.jpg'}
-                    alt='profile picture'
-                    width={130}
-                    height={130}
-                    className='object-cover rounded-full'
-                  />
-                  <div className='absolute bottom-0 right-2'>
-                    <Image 
-                      src={'/columbia-flag.jpg'}
-                      alt='flag'
-                      width={28}
-                      height={28}
-                      className='object-cover rounded-sm'
-                    />
-                  </div>
-                </div>
-                <p className='text-2xl text-black font-bold font-poppins'>
-                  {index}
-                </p>
-                <p className='text-xl text-blue-600 font-semibold font-notoJp'>
-                  Web Developer <span className='font-bold'>· 3y+</span>
-                </p>
-              </div>
-            </motion.div>
+            <Card 
+              key={index} 
+              index={index} 
+              profileSrc={testimonial.profileSrc}
+              flagSrc={testimonial.flagSrc}
+              name={testimonial.name} 
+              experience={testimonial.experience} 
+              hobbies={testimonial.hobbies} 
+            />
           ))}
         </AnimatePresence>
       </div>
       <button
         onClick={handleNext}
-        className="h-7 w-7 rounded-full bg-gray-100 dark:bg-neutral-800 flex items-center justify-center group/button"
+        className="text-white active:scale-75"
       >
-        <IconArrowRight className="h-5 w-5 text-black dark:text-neutral-400 group-hover/button:-rotate-12 transition-transform duration-300" />
+        <IconChevronRight width={40} height={40} />
       </button>
     </div>
   );
-  {/* <AnimatePresence>
-    {testimonials.map((testimonial, index) => (
-      <motion.div
-        key={index}
-        initial={{
-          opacity: 0,
-          scale: 0.9,
-          z: -100,
-          rotate: randomRotateY(),
-        }}
-        animate={{
-          opacity: isActive(index) ? 1 : 0.7,
-          scale: isActive(index) ? 1 : 0.95,
-          z: isActive(index) ? 0 : -100,
-          rotate: isActive(index) ? 0 : randomRotateY(),
-          zIndex: isActive(index)
-            ? 999
-            : testimonials.length + 2 - index,
-          y: isActive(index) ? [0, -80, 0] : 0,
-        }}
-        exit={{
-          opacity: 0,
-          scale: 0.9,
-          z: 100,
-          rotate: randomRotateY(),
-        }}
-        transition={{
-          duration: 0.4,
-          ease: "easeInOut",
-        }}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[18rem] h-fit bg-white rounded-md px-4 py-6"
-      >
-        <div className='flex flex-col items-center mb-10'>
-          <div className='relative mb-5'>
-            <Image 
-              src={'/profile-pic.jpg'}
-              alt='profile picture'
-              width={130}
-              height={130}
-              className='object-cover rounded-full'
-            />
-            <div className='absolute bottom-0 right-2'>
-              <Image 
-                src={'/columbia-flag.jpg'}
-                alt='flag'
-                width={28}
-                height={28}
-                className='object-cover rounded-sm'
-              />
-            </div>
-          </div>
-          <p className='text-2xl text-black font-bold font-poppins'>
-            Agung Saputra
-          </p>
-          <p className='text-xl text-blue-600 font-semibold font-notoJp'>
-            Web Developer <span className='font-bold'>· 3y+</span>
-          </p>
-        </div>
-      </motion.div>
-    ))}
-  </AnimatePresence> */}
-};
+}
