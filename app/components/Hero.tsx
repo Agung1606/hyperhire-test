@@ -27,7 +27,7 @@ const Hero = () => {
   );
 
   return (
-    <div className='bg-gradient-to-bl from-[#26C2B9] to-[#288BE7] py-[5rem]'>
+    <div className='py-[5rem]'>
       <div className='container'>
         <div className='flex flex-col md:flex-row gap-y-10'>
           <div>
@@ -39,10 +39,10 @@ const Hero = () => {
               법률 및 인사관리 부담없이<br />
               <span>1주일 이내에 원격으로 채용해보세요.</span>
             </p>
-            <a href="" className='text-xl text-white font-poppins font-black underline hidden lg:flex'>
+            <a href="" className='hidden md:flex text-xl text-white font-poppins font-black underline'>
               개발자가 필요하신가요?
             </a>
-            <div className='hidden lg:flex gap-x-8 mt-16'>
+            <div className='hidden xl:flex gap-x-8 mt-16'>
               {heroInfo1.map((info, index) => (
                 <div key={index} className='border-t-2 border-white/90 py-2 w-44 h-auto'>
                   <h3 className='text-white font-poppins font-black text-lg'>
@@ -65,7 +65,9 @@ const Hero = () => {
                   <motion.div 
                     key={testimonial.id} 
                     className={`absolute w-[18.5rem] h-[26.2rem] bg-white rounded-md px-4 py-6 ${
-                      testimonial.id === 0 ? "-translate-x-20 opacity-90" : testimonial.id === 2 ? "translate-x-20 opacity-90" : "scale-105 z-20"
+                      testimonial.id === 0 ? "-translate-x-12 xl:-translate-x-20 opacity-90 pointer-events-none" : 
+                      testimonial.id === 2 ? "translate-x-12 xl:translate-x-20 opacity-90 pointer-events-none" : 
+                      "scale-105 z-20"
                     }`}
                     onMouseEnter={() => setHoveredIndex(testimonial.id)}
                     onMouseLeave={() => setHoveredIndex(null)}
@@ -153,6 +155,19 @@ const Hero = () => {
               <IconChevronRight width={40} height={40} />
             </button>
           </div>
+        </div>
+        <div className='hidden lg:flex items-center gap-x-[10px] mt-16'>
+          {heroInfo2.map((info, index) => (
+            <div 
+              key={index}
+              className='flex-1 bg-white/20 backdrop-blur-md flex items-center gap-x-6 p-4 rounded-xl'
+            >
+              <div className='bg-white/40 p-3 rounded-lg'>
+                {info.icon}
+              </div>
+              <p className='text-white font-poppins font-black'>{info.text}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

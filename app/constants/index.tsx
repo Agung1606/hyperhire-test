@@ -3,7 +3,10 @@ import {
   IconLibraryPhoto,
   IconBox,
   IconStar,
-  IconPhoneCall
+  IconPhoneCall,
+  IconCode,
+  IconUserFilled,
+  IconSettingsFilled
 } from "@tabler/icons-react"
 
 const heroInfo1 = [
@@ -71,8 +74,28 @@ const testimonials = [
   },
 ];
 
+const infoFooterCard = [
+  {
+    icon: <IconCode className="w-6 h-6 text-slate-500" />,
+    text: "해외 개발자 원격 채용"
+  },
+  {
+    icon: <IconUserFilled className="w-6 h-6 text-slate-500" />,
+    text: "외국인 원격 채용 (비개발)"
+  },
+  {
+    icon: "KOR",
+    text: "한국어 가능 외국인 채용"
+  },
+  {
+    icon: <IconSettingsFilled className="w-6 h-6 text-slate-500" />,
+    text: "해외 개발자 활용 서비스"
+  },
+];
+
 export {
   heroInfo1,
   heroInfo2,
-  testimonials
+  testimonials,
+  infoFooterCard
 }

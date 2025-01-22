@@ -12,6 +12,6 @@
 
 @layer components {
   .container {
-    @apply max-w-[77.5rem] mx-auto px-5 md:px-10 lg:px-16 xl:max-w-[81.5rem];
+    @apply max-w-[77.5rem] mx-auto px-2 md:px-7 lg:px-12 xl:max-w-[81.5rem];
   }
 }
