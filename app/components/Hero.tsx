@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Image from 'next/image';
 import { heroInfo1, heroInfo2, testimonials } from "../constants/index"
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
@@ -9,9 +9,28 @@ import {
   AnimatePresence, 
   useTransform, 
   useMotionValue, 
-  useSpring 
+  useSpring,
 } from "framer-motion";
+import { InfiniteMovingCards } from './ui/infinite-moving-cards';
 const Hero = () => {
+  const motionRef = useRef(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting)
+      },
+      { threshold: 0, rootMargin: "0px" }
+    )
+
+    if (motionRef.current) observer.observe(motionRef.current);
+
+    return () => {
+      if (motionRef.current) observer.unobserve(motionRef.current);
+    };
+  }, [])
+
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const springConfig = { stiffness: 100, damping: 5 };
   const x = useMotionValue(0); // going to set this value on mouse move
@@ -31,18 +50,39 @@ const Hero = () => {
       <div className='container'>
         <div className='flex flex-col md:flex-row gap-y-10'>
           <div>
-            <h1 className='text-[2.5rem] text-white font-poppins font-black leading-relaxed mb-4'>
+            <motion.h1 
+              ref={motionRef}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className='text-[2.5rem] text-white font-poppins font-black leading-relaxed mb-4'
+            >
               최고의 실력을 가진<br />
               <span>외국인 인재를 찾고 계신가요?</span>
-            </h1>
-            <p className='text-2xl text-white/90 font-poppins font-black leading-relaxed mb-4'>
-              법률 및 인사관리 부담없이<br />
-              <span>1주일 이내에 원격으로 채용해보세요.</span>
-            </p>
-            <a href="" className='hidden md:flex text-xl text-white font-poppins font-black underline'>
-              개발자가 필요하신가요?
-            </a>
-            <div className='hidden xl:flex gap-x-8 mt-16'>
+            </motion.h1>
+            <motion.div
+              ref={motionRef}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              <p 
+                className='text-2xl text-white/90 font-poppins font-black leading-relaxed mb-4'
+              >
+                법률 및 인사관리 부담없이<br />
+                <span>1주일 이내에 원격으로 채용해보세요.</span>
+              </p>
+              <a href="" className='hidden md:flex text-xl text-white font-poppins font-black underline'>
+                개발자가 필요하신가요?
+              </a>
+            </motion.div>
+            <motion.div 
+              ref={motionRef}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className='hidden xl:flex gap-x-8 mt-16'
+            >
               {heroInfo1.map((info, index) => (
                 <div key={index} className='border-t-2 border-white/90 py-2 w-44 h-auto'>
                   <h3 className='text-white font-poppins font-black text-lg'>
@@ -53,7 +93,7 @@ const Hero = () => {
                   </p>
                 </div>
               ))}
-            </div>
+            </motion.div>
           </div>
           <div className='flex-1 flex justify-between items-center'>
             <button className='text-white active:scale-75'>
@@ -156,18 +196,8 @@ const Hero = () => {
             </button>
           </div>
         </div>
-        <div className='hidden lg:flex items-center gap-x-[10px] mt-16'>
-          {heroInfo2.map((info, index) => (
-            <div 
-              key={index}
-              className='flex-1 bg-white/20 backdrop-blur-md flex items-center gap-x-6 p-4 rounded-xl'
-            >
-              <div className='bg-white/40 p-3 rounded-lg'>
-                {info.icon}
-              </div>
-              <p className='text-white font-poppins font-black'>{info.text}</p>
-            </div>
-          ))}
+        <div className='hidden lg:flex mt-16'>
+          <InfiniteMovingCards items={heroInfo2} direction='left' speed='normal' />
         </div>
       </div>
     </div>

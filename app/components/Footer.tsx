@@ -20,7 +20,7 @@ const Footer = () => {
         <div className='flex flex-col xl:flex-row gap-x-28'>
           <div>
             <div className='flex items-center gap-x-2 mb-2'>
-              <p>Logo</p>
+              <img src="/hyperfire-logo-1.png" alt="Hyperfire Logo" className='object-cover' />
               <h2 className='text-2xl text-[#2F2C2D] font-bold'>hyperhire</h2>
             </div>
             <p className='text-[14px] font-poppins font-black mb-4 w-full'>
