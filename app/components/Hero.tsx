@@ -1,17 +1,14 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from 'react'
-import Image from 'next/image';
 import { heroInfo1, heroInfo2, testimonials } from "../constants/index"
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
 import { 
   motion, 
-  AnimatePresence, 
-  useTransform, 
-  useMotionValue, 
-  useSpring,
 } from "framer-motion";
 import { InfiniteMovingCards } from './ui/infinite-moving-cards';
+import CardSlider from './CardSlider';
+import { checkboxText } from '../constants/index';
+
 const Hero = () => {
   const motionRef = useRef(null);
   const [isInView, setIsInView] = useState(false);
@@ -31,25 +28,21 @@ const Hero = () => {
     };
   }, [])
 
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
-  const springConfig = { stiffness: 100, damping: 5 };
-  const x = useMotionValue(0); // going to set this value on mouse move
-  // rotate the tooltip
-  const rotate = useSpring(
-    useTransform(x, [-100, 100], [-45, 45]),
-    springConfig
-  );
-  // translate the tooltip
-  const translateX = useSpring(
-    useTransform(x, [-100, 100], [-50, 50]),
-    springConfig
-  );
-
   return (
     <div className='py-[5rem]'>
       <div className='container'>
         <div className='flex flex-col md:flex-row gap-y-10'>
           <div>
+            <motion.div 
+              ref={motionRef}
+              initial={{ opacity: 0, y: -50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut", delay: 0.3 }}
+              className='relative bg-white w-fit py-[6px] px-3 mb-4 rounded-lg'
+            >
+              <div className='w-3 h-3 bg-white rotate-45 absolute -bottom-1 -z-0' />
+              <p className='text-lg text-[#40E2E8] font-poppins font-black'>풀타임, 파트타임</p>
+            </motion.div>
             <motion.h1 
               ref={motionRef}
               initial={{ opacity: 0, y: 50 }}
@@ -95,109 +88,24 @@ const Hero = () => {
               ))}
             </motion.div>
           </div>
-          <div className='flex-1 flex justify-between items-center'>
-            <button className='text-white active:scale-75'>
-              <IconChevronLeft width={40} height={40} />
-            </button>
-            <div className='relative w-[18.5rem] h-[26.2rem]'>
-              <AnimatePresence>
-                {testimonials.map((testimonial) => (
-                  <motion.div 
-                    key={testimonial.id} 
-                    className={`absolute w-[18.5rem] h-[26.2rem] bg-white rounded-md px-4 py-6 ${
-                      testimonial.id === 0 ? "-translate-x-12 xl:-translate-x-20 opacity-90 pointer-events-none" : 
-                      testimonial.id === 2 ? "translate-x-12 xl:translate-x-20 opacity-90 pointer-events-none" : 
-                      "scale-105 z-20"
-                    }`}
-                    onMouseEnter={() => setHoveredIndex(testimonial.id)}
-                    onMouseLeave={() => setHoveredIndex(null)}
-                  >
-                    {/* ---TOOLTIP--- */}
-                    <AnimatePresence mode="popLayout">
-                      {hoveredIndex === testimonial.id && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20, scale: 0.6 }}
-                          animate={{
-                            opacity: 1,
-                            y: 0,
-                            scale: 1,
-                            transition: {
-                              type: "spring",
-                              stiffness: 260,
-                              damping: 10,
-                            },
-                          }}
-                          exit={{ opacity: 0, y: 20, scale: 0.6 }}
-                          style={{
-                            translateX: translateX,
-                            rotate: rotate,
-                            whiteSpace: "nowrap",
-                          }}
-                          className="absolute -top-12 left-[71px] flex text-xs flex-col items-center justify-center rounded-lg bg-[#E9F7EF] z-50 shadow-xl px-3 py-1"
-                        >
-                          <div className="text-[#00C696] text-xl font-notoJp flex items-center gap-x-2">
-                            <div className="w-7 h-7 bg-[#BBF3D2] rounded-full flex items-center justify-center">
-                              <p className="font-bold">$</p>
-                            </div>
-                            <p className="font-bold">월100만원</p>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                    {/* ---TOOLTIP--- */}
-                    <div className='flex flex-col items-center mb-10'>
-                      <div className='relative mb-5'>
-                        <Image 
-                          src={testimonial.profileSrc}
-                          alt='Profile Picture'
-                          width={130}
-                          height={130}
-                          className='object-cover rounded-full'
-                        />
-                        <div className='absolute bottom-0 right-2'>
-                          <Image 
-                            src={testimonial.flagSrc}
-                            alt='User Flag'
-                            width={28}
-                            height={28}
-                            className='object-cover rounded-sm'
-                          />
-                        </div>
-                      </div>
-                      <p className='text-2xl text-black font-poppins font-black'>
-                        {testimonial.name}
-                      </p>
-                      <p className='text-xl text-[#4A77FF] font-poppins font-black'>
-                        {testimonial.experience}
-                      </p>
-                    </div>
-                    <div className='grid grid-cols-2 justify-items-center gap-1'>
-                      {testimonial.hobbies.map((hobby, index) => (
-                        <p 
-                          key={index} 
-                          className={`w-fit font-poppins font-black text-[#5E626F] text-lg border border-[#C1C5CF] px-2 py-1 rounded-lg ${
-                            index === 0 || index === 1
-                            ? "col-span-2"
-                            : index === 2
-                            ? "-mr-2"
-                            : "-ml-2"
-                          }`}
-                        >
-                          {hobby}
-                        </p>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-            <button className='text-white active:scale-75'>
-              <IconChevronRight width={40} height={40} />
-            </button>
-          </div>
+          <CardSlider 
+            testimonials={testimonials} 
+            className='flex-1 flex justify-between items-center' 
+          />
         </div>
         <div className='hidden lg:flex mt-16'>
           <InfiniteMovingCards items={heroInfo2} direction='left' speed='normal' />
+        </div>
+        <div className='block md:hidden mt-16'>
+          <div className='grid grid-cols-2 w-fit gap-y-2 mb-6'>
+            {checkboxText.map((text, index) => (
+              <div key={index} className='flex items-center gap-x-2'>
+                <input type="checkbox" className='w-7 h-7 rounded-xl' />
+                <p className='text-lg text-white font-poppins font-black'>{text}</p>
+              </div>
+            ))} 
+          </div>
+          <a href="" className='text-lg text-[#FBFF23] font-poppins font-black underline'>개발자가 필요하신가요?</a>
         </div>
       </div>
     </div>
